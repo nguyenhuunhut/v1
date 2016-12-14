@@ -1,19 +1,17 @@
 module Api::V1
-class SessionsController < Devise::SessionsController
-# before_action :ensure_params_exist, only: [:create, :destroy]
-# before_action :load_user_authentication
+class SessionsController < ApplicationsController
+before_action :ensure_params_exist, only: [:create, :destroy]
+before_action :load_user_authentication
 
-respond_to :json
+
 
 def create
-  @user = User.find_by_email user_params[:email]
 if @user.valid_password? user_params[:password]
   sign_in @user, store: false
-  render json: {message: "Signed in successfully",
-    user: @user},status: 200
-    return
+  render json: {message: "Signed in successfully",user: @user},status: 200
+  return
 end
-invalid_login_attempt
+  invalid_login_attempt
 end
 
 def destroy
